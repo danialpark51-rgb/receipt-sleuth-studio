@@ -10,7 +10,7 @@ import {
 /** Reads an uploaded receipt with AI. All DB/storage access runs as the signed-in user (RLS applies). */
 export const extractReceipt = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((input) => z.object({ receiptId: z.string().uuid() }).parse(input))
+  .validator((input) => z.object({ receiptId: z.string().uuid() }).parse(input))
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;
 
@@ -61,7 +61,7 @@ export const extractReceipt = createServerFn({ method: "POST" })
 /** Saves the reviewed values. Field provenance is recomputed here from the stored AI result. */
 export const saveReceiptReview = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((input) => reviewSchema.parse(input))
+  .validator((input) => reviewSchema.parse(input))
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;
     const { data: row, error } = await supabase
