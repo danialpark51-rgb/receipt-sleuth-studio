@@ -81,7 +81,7 @@ export const auditRows = [
 export const duplicatePairs = [
   {
     id: "DUP-031", similarity: 97, risk: "critical" as RiskLevel,
-    a: receipts[2], b: receipts[4],
+    a: receipts[2]!, b: receipts[4]!,
     evidence: [
       { label: "Merchant name", match: true },
       { label: "Total amount (₹1,240)", match: true },
@@ -92,7 +92,7 @@ export const duplicatePairs = [
   },
   {
     id: "DUP-030", similarity: 81, risk: "high" as RiskLevel,
-    a: receipts[0], b: receipts[6],
+    a: receipts[0]!, b: receipts[6]!,
     evidence: [
       { label: "Submitter", match: true },
       { label: "Category (Lodging)", match: true },
@@ -103,7 +103,7 @@ export const duplicatePairs = [
   },
   {
     id: "DUP-029", similarity: 64, risk: "medium" as RiskLevel,
-    a: receipts[3], b: receipts[8],
+    a: receipts[3]!, b: receipts[8]!,
     evidence: [
       { label: "Similar amount range", match: true },
       { label: "Same category", match: true },

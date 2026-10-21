@@ -20,9 +20,9 @@ const statusLabel = { open: "Open", in_review: "In review", escalated: "Escalate
 
 function InvestigationsPage() {
   const [q, setQ] = useState("");
-  const [selectedId, setSelectedId] = useState(investigations[0].id);
+  const [selectedId, setSelectedId] = useState(investigations[0]!.id);
   const list = investigations.filter((i) => `${i.title} ${i.subject} ${i.id}`.toLowerCase().includes(q.toLowerCase()));
-  const sel = investigations.find((i) => i.id === selectedId) ?? investigations[0];
+  const sel = investigations.find((i) => i.id === selectedId) ?? investigations[0]!;
 
   return (
     <>
