@@ -248,6 +248,7 @@ export type Database = {
           line_total: number | null
           quantity: number
           receipt_id: string
+          source: string
           unit_price: number | null
           updated_at: string
           user_id: string
@@ -259,6 +260,7 @@ export type Database = {
           line_total?: number | null
           quantity?: number
           receipt_id: string
+          source?: string
           unit_price?: number | null
           updated_at?: string
           user_id: string
@@ -270,6 +272,7 @@ export type Database = {
           line_total?: number | null
           quantity?: number
           receipt_id?: string
+          source?: string
           unit_price?: number | null
           updated_at?: string
           user_id?: string
@@ -289,11 +292,16 @@ export type Database = {
           category: string | null
           created_at: string
           currency: string
+          extraction: Json | null
+          extraction_error: string | null
+          field_sources: Json
           file_mime_type: string | null
           file_path: string | null
+          file_size_bytes: number | null
           id: string
           merchant_name: string | null
           notes: string | null
+          original_filename: string | null
           payment_method: string | null
           receipt_date: string | null
           status: string
@@ -307,11 +315,16 @@ export type Database = {
           category?: string | null
           created_at?: string
           currency?: string
+          extraction?: Json | null
+          extraction_error?: string | null
+          field_sources?: Json
           file_mime_type?: string | null
           file_path?: string | null
+          file_size_bytes?: number | null
           id?: string
           merchant_name?: string | null
           notes?: string | null
+          original_filename?: string | null
           payment_method?: string | null
           receipt_date?: string | null
           status?: string
@@ -325,11 +338,16 @@ export type Database = {
           category?: string | null
           created_at?: string
           currency?: string
+          extraction?: Json | null
+          extraction_error?: string | null
+          field_sources?: Json
           file_mime_type?: string | null
           file_path?: string | null
+          file_size_bytes?: number | null
           id?: string
           merchant_name?: string | null
           notes?: string | null
+          original_filename?: string | null
           payment_method?: string | null
           receipt_date?: string | null
           status?: string
@@ -354,7 +372,15 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      save_receipt_review: {
+        Args: {
+          _field_sources: Json
+          _fields: Json
+          _items: Json
+          _receipt_id: string
+        }
+        Returns: undefined
+      }
     }
     Enums: {
       [_ in never]: never
