@@ -205,7 +205,7 @@ function StatusPill({ status }: { status: string }) {
   const map: Record<string, [string, string]> = {
     uploaded: ["Uploaded", "bg-muted text-muted-foreground"],
     processing: ["Reading", "bg-accent text-primary"],
-    extracted: ["Needs review", "bg-warning/15 text-warning-foreground"],
+    extracted: ["Needs review", "bg-warning/15 text-warning"],
     processed: ["Saved", "bg-success/15 text-success"],
     failed: ["Failed", "bg-destructive/10 text-destructive"],
   };
@@ -217,7 +217,7 @@ function FileLink({ path }: { path: string | null }) {
   const open = async () => {
     if (!path) return;
     const { data, error } = await supabase.storage.from(RECEIPT_BUCKET).createSignedUrl(path, 120);
-    if (error || !data) return toast.error("Couldn't open the file.");
+    if (error || !data) { toast.error("Couldn't open the file."); return; }
     window.open(data.signedUrl, "_blank", "noopener,noreferrer");
   };
   return <Button variant="outline" onClick={() => void open()} disabled={!path}><ExternalLink className="mr-2 h-4 w-4" />View file</Button>;
@@ -323,7 +323,7 @@ function ReviewForm({ receipt }: { receipt: ReceiptRow }) {
     <div>
       <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
         <div className="flex flex-wrap gap-3 text-xs text-muted-foreground">
-          <Legend cls="bg-accent text-primary" label="Read by AI" /><Legend cls="bg-warning/15 text-warning-foreground" label="Edited by you" /><Legend cls="bg-muted text-muted-foreground" label="Not found" />
+          <Legend cls="bg-accent text-primary" label="Read by AI" /><Legend cls="bg-warning/15 text-warning" label="Edited by you" /><Legend cls="bg-muted text-muted-foreground" label="Not found" />
         </div>
         <FileLink path={receipt.file_path} />
       </div>
@@ -381,7 +381,7 @@ function ReviewForm({ receipt }: { receipt: ReceiptRow }) {
 }
 
 function sourceStyle(s: "extracted" | "corrected" | "missing") {
-  return s === "extracted" ? { cls: "bg-accent text-primary", label: "AI" } : s === "corrected" ? { cls: "bg-warning/15 text-warning-foreground", label: "Edited" } : { cls: "bg-muted text-muted-foreground", label: "Not found" };
+  return s === "extracted" ? { cls: "bg-accent text-primary", label: "AI" } : s === "corrected" ? { cls: "bg-warning/15 text-warning", label: "Edited" } : { cls: "bg-muted text-muted-foreground", label: "Not found" };
 }
 function SourceTag({ cls, label }: { cls: string; label: string }) {
   return <span className={cn("rounded px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-wide", cls)}>{label}</span>;
