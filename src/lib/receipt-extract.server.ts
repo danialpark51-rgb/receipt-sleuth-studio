@@ -78,6 +78,7 @@ export async function extractReceiptFields(bytes: Uint8Array, mime: ReceiptMime,
   } catch (err) {
     if (signal.aborted) return { ok: false, error: "Receipt reading timed out. Please try again." };
     if (err instanceof ConfigurationError || err instanceof AuthenticationError) {
+      console.error("receipt extraction gateway configuration failed", { name: err.name });
       return { ok: false, configuration: true, error: "Receipt reading isn't configured for this app yet." };
     }
     if (err instanceof PaymentRequiredError) return { ok: false, configuration: true, error: "AI credits are used up for this workspace. Add credits, then try again." };

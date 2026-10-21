@@ -1,0 +1,20 @@
+URGENT: ReceiptIQ Feature 1 still displays "Couldn't reach the reader. Please try again."
+
+Fix this issue in the EXISTING project. Do not rebuild the app, redesign the UI, remove features, or replace Supabase.
+
+Investigate the complete receipt-reading request from frontend to backend.
+
+1. Find the exact function that displays this error and trace the request it makes.
+2. Check the browser/client error, HTTP status code, backend logs, network request, response body, and stack trace.
+3. Identify the exact reader endpoint and determine whether it calls a Supabase Edge Function, Lovable AI gateway, or another OCR/AI provider.
+4. Check whether the endpoint exists, is deployed, is reachable from Replit, and receives the correct authentication headers and request payload.
+5. Check whether required provider credentials are missing or configured in the wrong environment. Never print or expose secret values.
+6. Check for incorrect environment-variable names, outdated Lovable URLs, CORS failures, invalid response parsing, timeouts, and file-upload/storage errors.
+7. Fix the confirmed root cause using the smallest safe code change. Reuse the existing reader where possible; do not introduce another paid provider without asking me.
+8. Preserve real OCR/AI processing, private Supabase Storage, authenticated access, RLS, editable receipt review, and saving behavior. Never return fake or hardcoded extraction results.
+9. Add safe diagnostic logging that identifies the failing stage without recording receipt contents, personal information, or secrets.
+10. Test the reader with a real receipt if credentials are available. If a provider key or deployment is missing, state exactly what must be configured instead of claiming the issue is fixed.
+
+Before changing database schemas, storage policies, or security settings, explain the proposed change and ask for approval.
+
+First report the root cause, relevant error code, and required fix. Then apply the minimum necessary fix and report which tests actually passed.

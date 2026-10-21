@@ -1,5 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
+import { forwardSupabaseAuth } from "@/integrations/supabase/auth-client-middleware";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import type { Json } from "@/integrations/supabase/types";
 import {
@@ -7,12 +8,26 @@ import {
   type FieldSource, type ReviewField,
 } from "./receipt-schema";
 
+function safeErrorDetails(error: unknown) {
+  if (!error || typeof error !== "object") return { name: "UnknownError" };
+  const value = error as { name?: unknown; code?: unknown; status?: unknown; statusCode?: unknown; httpStatus?: unknown };
+  const status = [value.status, value.statusCode, value.httpStatus].find(
+    (candidate): candidate is number => typeof candidate === "number" && Number.isInteger(candidate),
+  );
+  return {
+    name: typeof value.name === "string" ? value.name : "UnknownError",
+    ...(typeof value.code === "string" ? { code: value.code.slice(0, 80) } : {}),
+    ...(status !== undefined ? { status } : {}),
+  };
+}
+
 /** Reads an uploaded receipt with AI. All DB/storage access runs as the signed-in user (RLS applies). */
 export const extractReceipt = createServerFn({ method: "POST" })
-  .middleware([requireSupabaseAuth])
+  .middleware([forwardSupabaseAuth, requireSupabaseAuth])
   .validator((input) => z.object({ receiptId: z.string().uuid() }).parse(input))
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;
+    let stage = "claim";
 
     // Claim the row; blocks double-processing and rows owned by others (RLS + user_id).
     const { data: row, error: claimErr } = await supabase
@@ -34,18 +49,22 @@ export const extractReceipt = createServerFn({ method: "POST" })
     if (!row.file_path || !row.file_path.startsWith(`${userId}/`)) return fail("This receipt has no file attached.");
 
     try {
+      stage = "storage_download";
       const { data: blob, error: dlErr } = await supabase.storage.from(RECEIPT_BUCKET).download(row.file_path);
       if (dlErr || !blob) return fail("Couldn't open the uploaded file.");
       if (blob.size > MAX_RECEIPT_BYTES) return fail("File is larger than 10 MB.");
       const bytes = new Uint8Array(await blob.arrayBuffer());
+      stage = "file_validation";
       const mime = sniffReceiptMime(bytes);
       if (!mime) return fail("This file isn't a valid JPG, PNG or PDF.");
 
+      stage = "ai_gateway";
       const { extractReceiptFields } = await import("./receipt-extract.server");
       const result = await extractReceiptFields(bytes, mime, row.original_filename ?? "receipt");
       if (!result.ok) return fail(result.error, { configuration: result.configuration ?? false });
 
       const x = result.data;
+      stage = "persist_extraction";
       const { error: saveErr } = await supabase.from("receipts").update({
         status: "extracted",
         extraction: x as unknown as Json,
@@ -53,14 +72,15 @@ export const extractReceipt = createServerFn({ method: "POST" })
       }).eq("id", row.id);
       if (saveErr) return fail("The receipt was read but the result couldn't be saved. Please try again.");
       return { ok: true as const };
-    } catch {
+    } catch (error) {
+      console.error("[receipt-reader] server handler failed", { stage, ...safeErrorDetails(error) });
       return fail("A temporary error interrupted receipt reading. Please try again.");
     }
   });
 
 /** Saves the reviewed values. Field provenance is recomputed here from the stored AI result. */
 export const saveReceiptReview = createServerFn({ method: "POST" })
-  .middleware([requireSupabaseAuth])
+  .middleware([forwardSupabaseAuth, requireSupabaseAuth])
   .validator((input) => reviewSchema.parse(input))
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;

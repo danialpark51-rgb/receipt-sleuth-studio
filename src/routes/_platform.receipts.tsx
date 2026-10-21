@@ -30,6 +30,18 @@ type ReceiptRow = {
 };
 const COLS = "id,status,original_filename,file_path,file_mime_type,extraction,extraction_error,created_at,merchant_name,receipt_date,currency,subtotal,tax_amount,total_amount";
 
+function safeRequestErrorDetails(error: unknown) {
+  if (!error || typeof error !== "object") return { name: "UnknownError" };
+  const value = error as { name?: unknown; status?: unknown; statusCode?: unknown };
+  const status = [value.status, value.statusCode].find(
+    (candidate): candidate is number => typeof candidate === "number" && Number.isInteger(candidate),
+  );
+  return {
+    name: typeof value.name === "string" ? value.name : "UnknownError",
+    ...(status !== undefined ? { status } : {}),
+  };
+}
+
 function uploadWithProgress(path: string, file: File, token: string, onProgress: (pct: number) => void) {
   return new Promise<void>((resolve, reject) => {
     const xhr = new XMLHttpRequest();
@@ -73,7 +85,8 @@ function ReceiptsPage() {
       const res = await extractFn({ data: { receiptId: id } });
       if (res.ok) toast.success("Receipt read. Please review the details.");
       else { if ("configuration" in res && res.configuration) setConfigMsg(res.error); toast.error(res.error); }
-    } catch {
+    } catch (requestError) {
+      console.error("[receipt-reader] server function request failed", safeRequestErrorDetails(requestError));
       toast.error("Couldn't reach the reader. Please try again.");
     } finally {
       setReading(false);
