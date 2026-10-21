@@ -14,9 +14,14 @@ import { Route as PlatformRouteImport } from './routes/_platform'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as SignupRouteImport } from './routes/signup'
 import { Route as PlatformAuditRouteImport } from './routes/_platform.audit'
+import { Route as PlatformAuthenticityRouteImport } from './routes/_platform.authenticity'
 import { Route as PlatformDashboardRouteImport } from './routes/_platform.dashboard'
 import { Route as PlatformDuplicatesRouteImport } from './routes/_platform.duplicates'
+import { Route as PlatformFairPriceRouteImport } from './routes/_platform.fair-price'
+import { Route as PlatformHistoryRouteImport } from './routes/_platform.history'
+import { Route as PlatformInvestigationsRouteImport } from './routes/_platform.investigations'
 import { Route as PlatformReceiptsRouteImport } from './routes/_platform.receipts'
+import { Route as PlatformSettingsRouteImport } from './routes/_platform.settings'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -42,6 +47,11 @@ const PlatformAuditRoute = PlatformAuditRouteImport.update({
   path: '/audit',
   getParentRoute: () => PlatformRoute,
 } as any)
+const PlatformAuthenticityRoute = PlatformAuthenticityRouteImport.update({
+  id: '/authenticity',
+  path: '/authenticity',
+  getParentRoute: () => PlatformRoute,
+} as any)
 const PlatformDashboardRoute = PlatformDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
@@ -52,9 +62,29 @@ const PlatformDuplicatesRoute = PlatformDuplicatesRouteImport.update({
   path: '/duplicates',
   getParentRoute: () => PlatformRoute,
 } as any)
+const PlatformFairPriceRoute = PlatformFairPriceRouteImport.update({
+  id: '/fair-price',
+  path: '/fair-price',
+  getParentRoute: () => PlatformRoute,
+} as any)
+const PlatformHistoryRoute = PlatformHistoryRouteImport.update({
+  id: '/history',
+  path: '/history',
+  getParentRoute: () => PlatformRoute,
+} as any)
+const PlatformInvestigationsRoute = PlatformInvestigationsRouteImport.update({
+  id: '/investigations',
+  path: '/investigations',
+  getParentRoute: () => PlatformRoute,
+} as any)
 const PlatformReceiptsRoute = PlatformReceiptsRouteImport.update({
   id: '/receipts',
   path: '/receipts',
+  getParentRoute: () => PlatformRoute,
+} as any)
+const PlatformSettingsRoute = PlatformSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
   getParentRoute: () => PlatformRoute,
 } as any)
 
@@ -63,18 +93,28 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
   '/audit': typeof PlatformAuditRoute
+  '/authenticity': typeof PlatformAuthenticityRoute
   '/dashboard': typeof PlatformDashboardRoute
   '/duplicates': typeof PlatformDuplicatesRoute
+  '/fair-price': typeof PlatformFairPriceRoute
+  '/history': typeof PlatformHistoryRoute
+  '/investigations': typeof PlatformInvestigationsRoute
   '/receipts': typeof PlatformReceiptsRoute
+  '/settings': typeof PlatformSettingsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
   '/audit': typeof PlatformAuditRoute
+  '/authenticity': typeof PlatformAuthenticityRoute
   '/dashboard': typeof PlatformDashboardRoute
   '/duplicates': typeof PlatformDuplicatesRoute
+  '/fair-price': typeof PlatformFairPriceRoute
+  '/history': typeof PlatformHistoryRoute
+  '/investigations': typeof PlatformInvestigationsRoute
   '/receipts': typeof PlatformReceiptsRoute
+  '/settings': typeof PlatformSettingsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -83,9 +123,14 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
   '/_platform/audit': typeof PlatformAuditRoute
+  '/_platform/authenticity': typeof PlatformAuthenticityRoute
   '/_platform/dashboard': typeof PlatformDashboardRoute
   '/_platform/duplicates': typeof PlatformDuplicatesRoute
+  '/_platform/fair-price': typeof PlatformFairPriceRoute
+  '/_platform/history': typeof PlatformHistoryRoute
+  '/_platform/investigations': typeof PlatformInvestigationsRoute
   '/_platform/receipts': typeof PlatformReceiptsRoute
+  '/_platform/settings': typeof PlatformSettingsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -94,18 +139,28 @@ export interface FileRouteTypes {
     | '/login'
     | '/signup'
     | '/audit'
+    | '/authenticity'
     | '/dashboard'
     | '/duplicates'
+    | '/fair-price'
+    | '/history'
+    | '/investigations'
     | '/receipts'
+    | '/settings'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/login'
     | '/signup'
     | '/audit'
+    | '/authenticity'
     | '/dashboard'
     | '/duplicates'
+    | '/fair-price'
+    | '/history'
+    | '/investigations'
     | '/receipts'
+    | '/settings'
   id:
     | '__root__'
     | '/'
@@ -113,9 +168,14 @@ export interface FileRouteTypes {
     | '/login'
     | '/signup'
     | '/_platform/audit'
+    | '/_platform/authenticity'
     | '/_platform/dashboard'
     | '/_platform/duplicates'
+    | '/_platform/fair-price'
+    | '/_platform/history'
+    | '/_platform/investigations'
     | '/_platform/receipts'
+    | '/_platform/settings'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -162,6 +222,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PlatformAuditRouteImport
       parentRoute: typeof PlatformRoute
     }
+    '/_platform/authenticity': {
+      id: '/_platform/authenticity'
+      path: '/authenticity'
+      fullPath: '/authenticity'
+      preLoaderRoute: typeof PlatformAuthenticityRouteImport
+      parentRoute: typeof PlatformRoute
+    }
     '/_platform/dashboard': {
       id: '/_platform/dashboard'
       path: '/dashboard'
@@ -176,6 +243,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PlatformDuplicatesRouteImport
       parentRoute: typeof PlatformRoute
     }
+    '/_platform/fair-price': {
+      id: '/_platform/fair-price'
+      path: '/fair-price'
+      fullPath: '/fair-price'
+      preLoaderRoute: typeof PlatformFairPriceRouteImport
+      parentRoute: typeof PlatformRoute
+    }
+    '/_platform/history': {
+      id: '/_platform/history'
+      path: '/history'
+      fullPath: '/history'
+      preLoaderRoute: typeof PlatformHistoryRouteImport
+      parentRoute: typeof PlatformRoute
+    }
+    '/_platform/investigations': {
+      id: '/_platform/investigations'
+      path: '/investigations'
+      fullPath: '/investigations'
+      preLoaderRoute: typeof PlatformInvestigationsRouteImport
+      parentRoute: typeof PlatformRoute
+    }
     '/_platform/receipts': {
       id: '/_platform/receipts'
       path: '/receipts'
@@ -183,21 +271,38 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PlatformReceiptsRouteImport
       parentRoute: typeof PlatformRoute
     }
+    '/_platform/settings': {
+      id: '/_platform/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof PlatformSettingsRouteImport
+      parentRoute: typeof PlatformRoute
+    }
   }
 }
 
 interface PlatformRouteChildren {
   PlatformAuditRoute: typeof PlatformAuditRoute
+  PlatformAuthenticityRoute: typeof PlatformAuthenticityRoute
   PlatformDashboardRoute: typeof PlatformDashboardRoute
   PlatformDuplicatesRoute: typeof PlatformDuplicatesRoute
+  PlatformFairPriceRoute: typeof PlatformFairPriceRoute
+  PlatformHistoryRoute: typeof PlatformHistoryRoute
+  PlatformInvestigationsRoute: typeof PlatformInvestigationsRoute
   PlatformReceiptsRoute: typeof PlatformReceiptsRoute
+  PlatformSettingsRoute: typeof PlatformSettingsRoute
 }
 
 const PlatformRouteChildren: PlatformRouteChildren = {
   PlatformAuditRoute: PlatformAuditRoute,
+  PlatformAuthenticityRoute: PlatformAuthenticityRoute,
   PlatformDashboardRoute: PlatformDashboardRoute,
   PlatformDuplicatesRoute: PlatformDuplicatesRoute,
+  PlatformFairPriceRoute: PlatformFairPriceRoute,
+  PlatformHistoryRoute: PlatformHistoryRoute,
+  PlatformInvestigationsRoute: PlatformInvestigationsRoute,
   PlatformReceiptsRoute: PlatformReceiptsRoute,
+  PlatformSettingsRoute: PlatformSettingsRoute,
 }
 
 const PlatformRouteWithChildren = PlatformRoute._addFileChildren(
