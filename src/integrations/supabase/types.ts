@@ -372,7 +372,15 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      save_receipt_review: {
+        Args: {
+          _field_sources: Json
+          _fields: Json
+          _items: Json
+          _receipt_id: string
+        }
+        Returns: undefined
+      }
     }
     Enums: {
       [_ in never]: never
