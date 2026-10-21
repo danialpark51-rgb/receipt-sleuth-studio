@@ -1,0 +1,45 @@
+Fix the existing ReceiptIQ application imported from Lovable. The application currently has a run command error.
+
+IMPORTANT: Preserve the existing application. Do not rebuild it, redesign the UI, remove features, replace Supabase, or break Gmail authentication.
+
+PART 1 — FIX THE STARTUP ERROR
+
+1. Inspect the project structure, package.json, lockfile, dependencies, and Replit run configuration.
+2. Identify the actual cause of the startup error.
+3. Make only the minimum necessary changes.
+4. Run the application and verify that it starts successfully.
+
+PART 2 — VERIFY AND FIX OCR RECEIPT SCANNING
+
+Receipt Intelligence must reliably support JPG, JPEG, PNG, and PDF receipts up to 10 MB.
+
+1. Inspect the existing OCR/AI receipt-reading implementation before changing anything.
+2. Verify that uploaded files reach the intended secure processing service and that the service actually reads receipt content.
+3. Extract the merchant name, receipt date, currency, subtotal, tax, total, and individual line items, including item descriptions, quantities, unit prices, and line totals when available.
+4. Handle printed receipts, different layouts, blurry images, rotated images, multiple-page PDFs, missing fields, and unsupported or corrupted files gracefully.
+5. Never invent unreadable values. Return missing or uncertain fields as blank or explicitly uncertain.
+6. Reject non-receipt documents when the available evidence supports rejection, without incorrectly rejecting every unusual receipt layout.
+7. Validate extracted values and flag arithmetic discrepancies instead of silently changing the original data.
+8. Preserve the existing editable review form, AI/Edited/Not found tags, saving process, receipt history, retry functionality, and private Supabase Storage.
+9. Ensure each user's receipts remain private through authentication and existing Row Level Security policies.
+10. Handle network errors, OCR provider failures, timeouts, rate limits, and missing API credentials with clear error messages and safe retries.
+11. Never expose API keys, Supabase secret keys, or service-role keys in frontend code or logs. Use secure server-side environment variables.
+12. Do not replace a real OCR service with mock responses, hardcoded results, or fake successful scans.
+
+PART 3 — TESTING AND VERIFICATION
+
+Test the startup process, image receipt extraction, PDF extraction, file-size and file-type validation, missing fields, arithmetic checks, saving and reopening receipts, retry behavior, and unauthorized access.
+
+Use available automated tests and real test receipts where possible. If an external OCR/AI service or credentials are unavailable, state that clearly rather than claiming the feature works.
+
+Before modifying database tables, storage policies, authentication, or existing data, explain the proposed change and ask for approval.
+
+At completion, report:
+
+- The original startup error and its fix.
+- Which OCR tests actually passed.
+- Which tests could not be performed.
+- Whether any provider credentials or setup steps are still required.
+- Any remaining limitations.
+
+Preserve all existing working features and make only necessary changes.

@@ -55,6 +55,7 @@ export type ExtractOutcome =
 
 export async function extractReceiptFields(bytes: Uint8Array, mime: ReceiptMime, filename: string): Promise<ExtractOutcome> {
   const dataUrl = `data:${mime};base64,${toBase64(bytes)}`;
+  const signal = AbortSignal.timeout(90_000);
   const filePart = mime === "application/pdf"
     ? { type: "input_file" as const, filename, file_data: dataUrl }
     : { type: "input_image" as const, image_url: dataUrl, detail: "high" as const };
@@ -65,7 +66,7 @@ export async function extractReceiptFields(bytes: Uint8Array, mime: ReceiptMime,
       instructions: INSTRUCTIONS,
       input: [{ role: "user", content: [{ type: "input_text", text: "Extract the receipt fields." }, filePart] }],
       text: { format: { type: "json_schema", name: "receipt_extraction", schema: JSON_SCHEMA, strict: true } },
-    });
+    }, { signal, maxRetries: 2, retryWaitBudgetMs: 10_000 });
     const text = outputText(res);
     if (!text) return { ok: false, error: "The reader returned no result. Please try again." };
     let parsed: unknown;
@@ -75,6 +76,7 @@ export async function extractReceiptFields(bytes: Uint8Array, mime: ReceiptMime,
     if (!result.data.is_receipt) return { ok: false, error: "This file doesn't look like a receipt or invoice." };
     return { ok: true, data: result.data };
   } catch (err) {
+    if (signal.aborted) return { ok: false, error: "Receipt reading timed out. Please try again." };
     if (err instanceof ConfigurationError || err instanceof AuthenticationError) {
       return { ok: false, configuration: true, error: "Receipt reading isn't configured for this app yet." };
     }

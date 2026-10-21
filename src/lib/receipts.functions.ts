@@ -33,25 +33,29 @@ export const extractReceipt = createServerFn({ method: "POST" })
 
     if (!row.file_path || !row.file_path.startsWith(`${userId}/`)) return fail("This receipt has no file attached.");
 
-    const { data: blob, error: dlErr } = await supabase.storage.from(RECEIPT_BUCKET).download(row.file_path);
-    if (dlErr || !blob) return fail("Couldn't open the uploaded file.");
-    if (blob.size > MAX_RECEIPT_BYTES) return fail("File is larger than 10 MB.");
-    const bytes = new Uint8Array(await blob.arrayBuffer());
-    const mime = sniffReceiptMime(bytes);
-    if (!mime) return fail("This file isn't a real JPG, PNG or PDF.");
+    try {
+      const { data: blob, error: dlErr } = await supabase.storage.from(RECEIPT_BUCKET).download(row.file_path);
+      if (dlErr || !blob) return fail("Couldn't open the uploaded file.");
+      if (blob.size > MAX_RECEIPT_BYTES) return fail("File is larger than 10 MB.");
+      const bytes = new Uint8Array(await blob.arrayBuffer());
+      const mime = sniffReceiptMime(bytes);
+      if (!mime) return fail("This file isn't a valid JPG, PNG or PDF.");
 
-    const { extractReceiptFields } = await import("./receipt-extract.server");
-    const result = await extractReceiptFields(bytes, mime, row.original_filename ?? "receipt");
-    if (!result.ok) return fail(result.error, { configuration: result.configuration ?? false });
+      const { extractReceiptFields } = await import("./receipt-extract.server");
+      const result = await extractReceiptFields(bytes, mime, row.original_filename ?? "receipt");
+      if (!result.ok) return fail(result.error, { configuration: result.configuration ?? false });
 
-    const x = result.data;
-    const { error: saveErr } = await supabase.from("receipts").update({
-      status: "extracted",
-      extraction: x as unknown as Json,
-      file_mime_type: mime,
-    }).eq("id", row.id);
-    if (saveErr) return fail("The receipt was read but the result couldn't be saved. Please try again.");
-    return { ok: true as const };
+      const x = result.data;
+      const { error: saveErr } = await supabase.from("receipts").update({
+        status: "extracted",
+        extraction: x as unknown as Json,
+        file_mime_type: mime,
+      }).eq("id", row.id);
+      if (saveErr) return fail("The receipt was read but the result couldn't be saved. Please try again.");
+      return { ok: true as const };
+    } catch {
+      return fail("A temporary error interrupted receipt reading. Please try again.");
+    }
   });
 
 /** Saves the reviewed values. Field provenance is recomputed here from the stored AI result. */

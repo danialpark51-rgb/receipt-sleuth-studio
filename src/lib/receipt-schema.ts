@@ -13,8 +13,11 @@ export type ReceiptMime = keyof typeof ACCEPTED_RECEIPT_TYPES;
 
 export function validateReceiptFile(file: { name: string; type: string; size: number }): string | null {
   const ext = file.name.toLowerCase().split(".").pop() ?? "";
-  const okExt = ["jpg", "jpeg", "png", "pdf"].includes(ext);
-  if (!(file.type in ACCEPTED_RECEIPT_TYPES) || !okExt) return "Unsupported file. Please upload a JPG, JPEG, PNG or PDF.";
+  const expectedExt = Object.hasOwn(ACCEPTED_RECEIPT_TYPES, file.type)
+    ? ACCEPTED_RECEIPT_TYPES[file.type as ReceiptMime]
+    : undefined;
+  const matchesType = expectedExt === ext || (expectedExt === "jpg" && ext === "jpeg");
+  if (!matchesType) return "Unsupported file. Please upload a JPG, JPEG, PNG or PDF.";
   if (file.size <= 0) return "This file is empty.";
   if (file.size > MAX_RECEIPT_BYTES) return "File is larger than 10 MB.";
   return null;
