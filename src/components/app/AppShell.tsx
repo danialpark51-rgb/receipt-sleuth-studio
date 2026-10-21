@@ -1,5 +1,8 @@
 import { useState, type ReactNode } from "react";
-import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
+import { Link, useNavigate, useRouteContext, useRouterState } from "@tanstack/react-router";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 import {
   LayoutDashboard, ScanText, Calculator, Copy, ShieldCheck, Siren, MapPin, History, Settings, Menu, LogOut, Bell, User,
 } from "lucide-react";
@@ -52,6 +55,31 @@ function NavList({ onNavigate }: { onNavigate?: () => void }) {
 export function AppShell({ children }: { children: ReactNode }) {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const { user } = useRouteContext({ from: "/_platform" });
+  const email = user.email ?? "";
+
+  // Profile row is protected by RLS: only the owner's own row is returned.
+  const { data: profile } = useQuery({
+    queryKey: ["profile", user.id],
+    queryFn: async () => {
+      const { data, error } = await supabase.from("profiles").select("full_name").eq("id", user.id).maybeSingle();
+      if (error) throw error;
+      return data;
+    },
+  });
+  const displayName = profile?.full_name?.trim() || email;
+  const initials = (profile?.full_name?.trim() || email)
+    .split(/[\s@.]+/).filter(Boolean).slice(0, 2).map((s) => s[0]!.toUpperCase()).join("") || "U";
+
+  const handleSignOut = async () => {
+    await queryClient.cancelQueries();
+    queryClient.clear();
+    const { error } = await supabase.auth.signOut();
+    if (error) toast.error("Couldn't sign out. Please try again.");
+    else toast.success("Signed out.");
+    navigate({ to: "/login", replace: true });
+  };
   return (
     <div className="flex min-h-screen w-full bg-background">
       <aside className="sticky top-0 hidden h-screen w-64 shrink-0 flex-col border-r bg-sidebar px-4 py-5 lg:flex">
@@ -80,15 +108,18 @@ export function AppShell({ children }: { children: ReactNode }) {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="gap-2 px-2" aria-label="Account menu">
-                  <span className="grid h-8 w-8 place-items-center rounded-full bg-accent text-sm font-semibold text-primary">AN</span>
-                  <span className="hidden text-sm font-medium sm:inline">Demo User</span>
+                  <span className="grid h-8 w-8 place-items-center rounded-full bg-accent text-sm font-semibold text-primary">{initials}</span>
+                  <span className="hidden max-w-[12rem] truncate text-sm font-medium sm:inline">{displayName}</span>
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-52">
-                <DropdownMenuLabel>Demo account</DropdownMenuLabel>
+              <DropdownMenuContent align="end" className="w-60">
+                <DropdownMenuLabel className="truncate font-normal">
+                  <span className="block truncate font-medium">{displayName}</span>
+                  <span className="block truncate text-xs text-muted-foreground">{email}</span>
+                </DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onSelect={() => navigate({ to: "/settings" })}><User className="mr-2 h-4 w-4" />Profile & settings</DropdownMenuItem>
-                <DropdownMenuItem onSelect={() => navigate({ to: "/login" })}><LogOut className="mr-2 h-4 w-4" />Sign out</DropdownMenuItem>
+                <DropdownMenuItem onSelect={handleSignOut}><LogOut className="mr-2 h-4 w-4" />Sign out</DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
