@@ -10,33 +10,179 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as PlatformRouteImport } from './routes/_platform'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as SignupRouteImport } from './routes/signup'
+import { Route as PlatformAuditRouteImport } from './routes/_platform.audit'
+import { Route as PlatformAuthenticityRouteImport } from './routes/_platform.authenticity'
+import { Route as PlatformDashboardRouteImport } from './routes/_platform.dashboard'
+import { Route as PlatformDuplicatesRouteImport } from './routes/_platform.duplicates'
+import { Route as PlatformFairPriceRouteImport } from './routes/_platform.fair-price'
+import { Route as PlatformHistoryRouteImport } from './routes/_platform.history'
+import { Route as PlatformInvestigationsRouteImport } from './routes/_platform.investigations'
+import { Route as PlatformReceiptsRouteImport } from './routes/_platform.receipts'
+import { Route as PlatformSettingsRouteImport } from './routes/_platform.settings'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PlatformRoute = PlatformRouteImport.update({
+  id: '/_platform',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SignupRoute = SignupRouteImport.update({
+  id: '/signup',
+  path: '/signup',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PlatformAuditRoute = PlatformAuditRouteImport.update({
+  id: '/audit',
+  path: '/audit',
+  getParentRoute: () => PlatformRoute,
+} as any)
+const PlatformAuthenticityRoute = PlatformAuthenticityRouteImport.update({
+  id: '/authenticity',
+  path: '/authenticity',
+  getParentRoute: () => PlatformRoute,
+} as any)
+const PlatformDashboardRoute = PlatformDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => PlatformRoute,
+} as any)
+const PlatformDuplicatesRoute = PlatformDuplicatesRouteImport.update({
+  id: '/duplicates',
+  path: '/duplicates',
+  getParentRoute: () => PlatformRoute,
+} as any)
+const PlatformFairPriceRoute = PlatformFairPriceRouteImport.update({
+  id: '/fair-price',
+  path: '/fair-price',
+  getParentRoute: () => PlatformRoute,
+} as any)
+const PlatformHistoryRoute = PlatformHistoryRouteImport.update({
+  id: '/history',
+  path: '/history',
+  getParentRoute: () => PlatformRoute,
+} as any)
+const PlatformInvestigationsRoute = PlatformInvestigationsRouteImport.update({
+  id: '/investigations',
+  path: '/investigations',
+  getParentRoute: () => PlatformRoute,
+} as any)
+const PlatformReceiptsRoute = PlatformReceiptsRouteImport.update({
+  id: '/receipts',
+  path: '/receipts',
+  getParentRoute: () => PlatformRoute,
+} as any)
+const PlatformSettingsRoute = PlatformSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => PlatformRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/login': typeof LoginRoute
+  '/signup': typeof SignupRoute
+  '/audit': typeof PlatformAuditRoute
+  '/authenticity': typeof PlatformAuthenticityRoute
+  '/dashboard': typeof PlatformDashboardRoute
+  '/duplicates': typeof PlatformDuplicatesRoute
+  '/fair-price': typeof PlatformFairPriceRoute
+  '/history': typeof PlatformHistoryRoute
+  '/investigations': typeof PlatformInvestigationsRoute
+  '/receipts': typeof PlatformReceiptsRoute
+  '/settings': typeof PlatformSettingsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/login': typeof LoginRoute
+  '/signup': typeof SignupRoute
+  '/audit': typeof PlatformAuditRoute
+  '/authenticity': typeof PlatformAuthenticityRoute
+  '/dashboard': typeof PlatformDashboardRoute
+  '/duplicates': typeof PlatformDuplicatesRoute
+  '/fair-price': typeof PlatformFairPriceRoute
+  '/history': typeof PlatformHistoryRoute
+  '/investigations': typeof PlatformInvestigationsRoute
+  '/receipts': typeof PlatformReceiptsRoute
+  '/settings': typeof PlatformSettingsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_platform': typeof PlatformRouteWithChildren
+  '/login': typeof LoginRoute
+  '/signup': typeof SignupRoute
+  '/_platform/audit': typeof PlatformAuditRoute
+  '/_platform/authenticity': typeof PlatformAuthenticityRoute
+  '/_platform/dashboard': typeof PlatformDashboardRoute
+  '/_platform/duplicates': typeof PlatformDuplicatesRoute
+  '/_platform/fair-price': typeof PlatformFairPriceRoute
+  '/_platform/history': typeof PlatformHistoryRoute
+  '/_platform/investigations': typeof PlatformInvestigationsRoute
+  '/_platform/receipts': typeof PlatformReceiptsRoute
+  '/_platform/settings': typeof PlatformSettingsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/login'
+    | '/signup'
+    | '/audit'
+    | '/authenticity'
+    | '/dashboard'
+    | '/duplicates'
+    | '/fair-price'
+    | '/history'
+    | '/investigations'
+    | '/receipts'
+    | '/settings'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/login'
+    | '/signup'
+    | '/audit'
+    | '/authenticity'
+    | '/dashboard'
+    | '/duplicates'
+    | '/fair-price'
+    | '/history'
+    | '/investigations'
+    | '/receipts'
+    | '/settings'
+  id:
+    | '__root__'
+    | '/'
+    | '/_platform'
+    | '/login'
+    | '/signup'
+    | '/_platform/audit'
+    | '/_platform/authenticity'
+    | '/_platform/dashboard'
+    | '/_platform/duplicates'
+    | '/_platform/fair-price'
+    | '/_platform/history'
+    | '/_platform/investigations'
+    | '/_platform/receipts'
+    | '/_platform/settings'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  PlatformRoute: typeof PlatformRouteWithChildren
+  LoginRoute: typeof LoginRoute
+  SignupRoute: typeof SignupRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +194,126 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_platform': {
+      id: '/_platform'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof PlatformRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/signup': {
+      id: '/signup'
+      path: '/signup'
+      fullPath: '/signup'
+      preLoaderRoute: typeof SignupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_platform/audit': {
+      id: '/_platform/audit'
+      path: '/audit'
+      fullPath: '/audit'
+      preLoaderRoute: typeof PlatformAuditRouteImport
+      parentRoute: typeof PlatformRoute
+    }
+    '/_platform/authenticity': {
+      id: '/_platform/authenticity'
+      path: '/authenticity'
+      fullPath: '/authenticity'
+      preLoaderRoute: typeof PlatformAuthenticityRouteImport
+      parentRoute: typeof PlatformRoute
+    }
+    '/_platform/dashboard': {
+      id: '/_platform/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof PlatformDashboardRouteImport
+      parentRoute: typeof PlatformRoute
+    }
+    '/_platform/duplicates': {
+      id: '/_platform/duplicates'
+      path: '/duplicates'
+      fullPath: '/duplicates'
+      preLoaderRoute: typeof PlatformDuplicatesRouteImport
+      parentRoute: typeof PlatformRoute
+    }
+    '/_platform/fair-price': {
+      id: '/_platform/fair-price'
+      path: '/fair-price'
+      fullPath: '/fair-price'
+      preLoaderRoute: typeof PlatformFairPriceRouteImport
+      parentRoute: typeof PlatformRoute
+    }
+    '/_platform/history': {
+      id: '/_platform/history'
+      path: '/history'
+      fullPath: '/history'
+      preLoaderRoute: typeof PlatformHistoryRouteImport
+      parentRoute: typeof PlatformRoute
+    }
+    '/_platform/investigations': {
+      id: '/_platform/investigations'
+      path: '/investigations'
+      fullPath: '/investigations'
+      preLoaderRoute: typeof PlatformInvestigationsRouteImport
+      parentRoute: typeof PlatformRoute
+    }
+    '/_platform/receipts': {
+      id: '/_platform/receipts'
+      path: '/receipts'
+      fullPath: '/receipts'
+      preLoaderRoute: typeof PlatformReceiptsRouteImport
+      parentRoute: typeof PlatformRoute
+    }
+    '/_platform/settings': {
+      id: '/_platform/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof PlatformSettingsRouteImport
+      parentRoute: typeof PlatformRoute
+    }
   }
 }
 
+interface PlatformRouteChildren {
+  PlatformAuditRoute: typeof PlatformAuditRoute
+  PlatformAuthenticityRoute: typeof PlatformAuthenticityRoute
+  PlatformDashboardRoute: typeof PlatformDashboardRoute
+  PlatformDuplicatesRoute: typeof PlatformDuplicatesRoute
+  PlatformFairPriceRoute: typeof PlatformFairPriceRoute
+  PlatformHistoryRoute: typeof PlatformHistoryRoute
+  PlatformInvestigationsRoute: typeof PlatformInvestigationsRoute
+  PlatformReceiptsRoute: typeof PlatformReceiptsRoute
+  PlatformSettingsRoute: typeof PlatformSettingsRoute
+}
+
+const PlatformRouteChildren: PlatformRouteChildren = {
+  PlatformAuditRoute: PlatformAuditRoute,
+  PlatformAuthenticityRoute: PlatformAuthenticityRoute,
+  PlatformDashboardRoute: PlatformDashboardRoute,
+  PlatformDuplicatesRoute: PlatformDuplicatesRoute,
+  PlatformFairPriceRoute: PlatformFairPriceRoute,
+  PlatformHistoryRoute: PlatformHistoryRoute,
+  PlatformInvestigationsRoute: PlatformInvestigationsRoute,
+  PlatformReceiptsRoute: PlatformReceiptsRoute,
+  PlatformSettingsRoute: PlatformSettingsRoute,
+}
+
+const PlatformRouteWithChildren = PlatformRoute._addFileChildren(
+  PlatformRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  PlatformRoute: PlatformRouteWithChildren,
+  LoginRoute: LoginRoute,
+  SignupRoute: SignupRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
