@@ -10,3 +10,4 @@
 <!-- LOVABLE:END -->
 - Every child table (receipt_items, audit_results, investigation_evidence, price_checks) carries user_id plus a composite FK (parent_id, user_id) to its parent; why: the database itself blocks linking rows to another user's receipt or case.
 - Receipt files live in the private `receipt-files` bucket under `<user_id>/...`; why: storage policies match the first folder to auth.uid().
+- Workspace pages live under the pathless `_platform` layout, whose client-only (ssr: false) beforeLoad calls supabase.auth.getUser() and redirects to /login?redirect=...; why: the session is in browser storage, so a server-side gate would loop.
