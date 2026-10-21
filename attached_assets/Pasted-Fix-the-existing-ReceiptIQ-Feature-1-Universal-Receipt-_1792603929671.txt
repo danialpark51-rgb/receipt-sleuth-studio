@@ -1,0 +1,27 @@
+Fix the existing ReceiptIQ Feature 1: Universal Receipt Intelligence. The receipt reader is currently unreachable or cannot read uploaded receipts after importing the project from Lovable into Replit.
+
+Do not rebuild the application or redesign the UI. Preserve all existing features, Gmail authentication, Supabase database, receipt records, private storage, review form, and receipt history.
+
+First diagnose the actual failure before changing code.
+
+1. Trace the entire receipt-reading flow: file upload → private Supabase Storage → receipt record → OCR/AI processing request → processing endpoint or server function → provider response → parsed receipt data → review form.
+
+2. Identify exactly where the reader fails. Inspect frontend requests, backend routes, Supabase Edge Function calls, HTTP status codes, server logs, network errors, environment variable names, and response formats. Never print secret values.
+
+3. Check whether the existing reader is implemented as a Supabase Edge Function, a direct server-side API, or another service. Do not assume that it is a local Replit endpoint.
+
+4. Check whether the required OCR/AI provider credentials exist in the correct secure environment. Replit environment variables do not automatically transfer from Lovable or Supabase. Never expose API keys, Supabase secret keys, or service-role keys in frontend code.
+
+5. Check for incorrect URLs, missing endpoints, CORS issues, authentication headers, expired sessions, timeouts, request-size limits, unsupported PDF/image handling, and incorrect response parsing.
+
+6. If the existing OCR processor is a Supabase Edge Function, verify its deployed status, endpoint, authentication requirements, and configured secrets. Do not unnecessarily replace it with a new backend.
+
+7. Make only the minimum necessary fix. If a required secret or external configuration is missing, tell me exactly which setting must be configured and where. Never invent credentials or substitute mock OCR results.
+
+8. Verify the fix using an actual test receipt, if the required provider and credentials are available. Confirm that merchant, date, currency, subtotal, taxes, total, and line items are returned where readable.
+
+9. Preserve the existing 10 MB limit, allowed file types, editable review, saving behavior, private storage, and row-level security. Do not loosen security policies or modify existing receipt data destructively.
+
+10. Report the root cause, files changed, configuration still needed, and tests actually completed. Do not claim the reader is fixed unless a real receipt has been processed successfully.
+
+Start by diagnosing the failure and report the root cause before making any destructive or security-sensitive changes.
