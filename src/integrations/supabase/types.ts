@@ -14,7 +14,341 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      audit_results: {
+        Row: {
+          created_at: string
+          flags: Json
+          id: string
+          receipt_id: string
+          risk_level: string | null
+          risk_score: number | null
+          summary: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          flags?: Json
+          id?: string
+          receipt_id: string
+          risk_level?: string | null
+          risk_score?: number | null
+          summary?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          flags?: Json
+          id?: string
+          receipt_id?: string
+          risk_level?: string | null
+          risk_score?: number | null
+          summary?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "audit_results_receipt_id_user_id_fkey"
+            columns: ["receipt_id", "user_id"]
+            isOneToOne: false
+            referencedRelation: "receipts"
+            referencedColumns: ["id", "user_id"]
+          },
+        ]
+      }
+      investigation_evidence: {
+        Row: {
+          created_at: string
+          description: string | null
+          evidence_type: string
+          file_path: string | null
+          id: string
+          investigation_id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          evidence_type: string
+          file_path?: string | null
+          id?: string
+          investigation_id: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          evidence_type?: string
+          file_path?: string | null
+          id?: string
+          investigation_id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "investigation_evidence_investigation_id_user_id_fkey"
+            columns: ["investigation_id", "user_id"]
+            isOneToOne: false
+            referencedRelation: "investigations"
+            referencedColumns: ["id", "user_id"]
+          },
+        ]
+      }
+      investigations: {
+        Row: {
+          created_at: string
+          description: string | null
+          findings: string | null
+          id: string
+          priority: string
+          receipt_id: string | null
+          status: string
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          findings?: string | null
+          id?: string
+          priority?: string
+          receipt_id?: string | null
+          status?: string
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          findings?: string | null
+          id?: string
+          priority?: string
+          receipt_id?: string | null
+          status?: string
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "investigations_receipt_id_user_id_fkey"
+            columns: ["receipt_id", "user_id"]
+            isOneToOne: false
+            referencedRelation: "receipts"
+            referencedColumns: ["id", "user_id"]
+          },
+          {
+            foreignKeyName: "investigations_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      price_checks: {
+        Row: {
+          created_at: string
+          currency: string
+          difference_pct: number | null
+          id: string
+          item_name: string
+          market_price: number | null
+          paid_price: number
+          receipt_id: string | null
+          source: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          currency?: string
+          difference_pct?: number | null
+          id?: string
+          item_name: string
+          market_price?: number | null
+          paid_price: number
+          receipt_id?: string | null
+          source?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          currency?: string
+          difference_pct?: number | null
+          id?: string
+          item_name?: string
+          market_price?: number | null
+          paid_price?: number
+          receipt_id?: string | null
+          source?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "price_checks_receipt_id_user_id_fkey"
+            columns: ["receipt_id", "user_id"]
+            isOneToOne: false
+            referencedRelation: "receipts"
+            referencedColumns: ["id", "user_id"]
+          },
+          {
+            foreignKeyName: "price_checks_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          company: string | null
+          created_at: string
+          default_currency: string
+          full_name: string | null
+          id: string
+          role_title: string | null
+          updated_at: string
+        }
+        Insert: {
+          company?: string | null
+          created_at?: string
+          default_currency?: string
+          full_name?: string | null
+          id: string
+          role_title?: string | null
+          updated_at?: string
+        }
+        Update: {
+          company?: string | null
+          created_at?: string
+          default_currency?: string
+          full_name?: string | null
+          id?: string
+          role_title?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      receipt_items: {
+        Row: {
+          created_at: string
+          description: string
+          id: string
+          line_total: number | null
+          quantity: number
+          receipt_id: string
+          unit_price: number | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          description: string
+          id?: string
+          line_total?: number | null
+          quantity?: number
+          receipt_id: string
+          unit_price?: number | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          id?: string
+          line_total?: number | null
+          quantity?: number
+          receipt_id?: string
+          unit_price?: number | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "receipt_items_receipt_id_user_id_fkey"
+            columns: ["receipt_id", "user_id"]
+            isOneToOne: false
+            referencedRelation: "receipts"
+            referencedColumns: ["id", "user_id"]
+          },
+        ]
+      }
+      receipts: {
+        Row: {
+          category: string | null
+          created_at: string
+          currency: string
+          file_mime_type: string | null
+          file_path: string | null
+          id: string
+          merchant_name: string | null
+          notes: string | null
+          payment_method: string | null
+          receipt_date: string | null
+          status: string
+          subtotal: number | null
+          tax_amount: number | null
+          total_amount: number | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          category?: string | null
+          created_at?: string
+          currency?: string
+          file_mime_type?: string | null
+          file_path?: string | null
+          id?: string
+          merchant_name?: string | null
+          notes?: string | null
+          payment_method?: string | null
+          receipt_date?: string | null
+          status?: string
+          subtotal?: number | null
+          tax_amount?: number | null
+          total_amount?: number | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          category?: string | null
+          created_at?: string
+          currency?: string
+          file_mime_type?: string | null
+          file_path?: string | null
+          id?: string
+          merchant_name?: string | null
+          notes?: string | null
+          payment_method?: string | null
+          receipt_date?: string | null
+          status?: string
+          subtotal?: number | null
+          tax_amount?: number | null
+          total_amount?: number | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "receipts_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
