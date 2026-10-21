@@ -26,7 +26,7 @@ function friendlyError(message: string) {
   return message;
 }
 
-export function AuthForm({ mode, redirectTo }: { mode: "login" | "signup"; redirectTo?: string }) {
+export function AuthForm({ mode, redirectTo }: { mode: "login" | "signup"; redirectTo?: string | undefined }) {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -45,11 +45,11 @@ export function AuthForm({ mode, redirectTo }: { mode: "login" | "signup"; redir
     e.preventDefault();
     const form = new FormData(e.currentTarget);
     const email = emailSchema.safeParse(form.get("email") ?? "");
-    if (!email.success) return setError(email.error.issues[0].message);
+    if (!email.success) return setError(email.error.issues[0]?.message ?? "Invalid input.");
     const password = passwordSchema.safeParse(form.get("password") ?? "");
-    if (!password.success) return setError(password.error.issues[0].message);
+    if (!password.success) return setError(password.error.issues[0]?.message ?? "Invalid input.");
     const name = nameSchema.safeParse(form.get("name") ?? "");
-    if (!name.success) return setError(name.error.issues[0].message);
+    if (!name.success) return setError(name.error.issues[0]?.message ?? "Invalid input.");
 
     setError(null);
     setLoading(true);
